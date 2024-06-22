@@ -49,18 +49,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Ansible
+      - name: Deploy to production
         uses: dawidd6/action-ansible-playbook@v2
-        with:
-          requirements: |
-            - name: community.docker
-
-      - name: Run Ansible Playbook
         env:
           ANSIBLE_HOST_KEY_CHECKING: false
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          VM_IP_ADDRESS: ${{ secrets.VM_IP_ADDRESS }}
-        run: |
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > private_key
-          chmod 600 private_key
-          ansible-playbook -i "${{ secrets.VM_IP_ADDRESS }}" playbook.yml --private-key private_key
+        with:
+          inventory: |
+            [all]
+            ${{ secrets.VM_IP_ADDRESS }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          playbook: deploy-playbook.yml
+          requirements: |
+            - name: community.docker
