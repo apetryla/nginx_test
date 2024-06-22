@@ -70,6 +70,8 @@ jobs:
         run: |
           pip3 install -r requirements.txt
 
+          whoami
+          id
           docker ps -a
           curl localhost:80 || true
 
