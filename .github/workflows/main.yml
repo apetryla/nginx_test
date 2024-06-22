@@ -59,4 +59,4 @@ jobs:
             ${{ secrets.VM_IP_ADDRESS }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           playbook: deploy-playbook.yml
-          requirements: community.docker
+          requirements: ansible-requirements.yml
