@@ -69,4 +69,17 @@ jobs:
       - name: Test newly deployed Nginx
         run: |
           pip3 install -r requirements.txt
-          python3 test_nginx.py
+
+          # Waiting for nginx to start within container.
+          # Another solution would be to implement HEALTHCHECK in dockerifle.
+          for i in {1..5}; do
+            if python3 test_nginx.py; then
+              echo "Tests passed."
+              exit 0
+            else
+              echo "Tests failed, retrying in 5 seconds..."
+              sleep 5
+            fi
+          done
+          echo "Tests failed after 5 retries."
+          exit 1
