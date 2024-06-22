@@ -29,8 +29,7 @@ jobs:
       run: |
         sudo apt-get install -y python3-pip
         pip3 install -r requirements.txt
-        ls -la
-        python3 check_nginx.py
+        python3 test_nginx.py
 
     - name: Tag Docker image
       run: docker tag nginx-test-app:latest $IMAGE_NAME
