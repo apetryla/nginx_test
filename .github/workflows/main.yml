@@ -70,6 +70,9 @@ jobs:
         run: |
           pip3 install -r requirements.txt
 
+          docker ps -a
+          curl localhost:80 || true
+
           # Waiting for nginx to start within container.
           # Another solution would be to implement HEALTHCHECK in dockerifle.
           for i in {1..5}; do
