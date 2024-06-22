@@ -49,9 +49,6 @@ jobs:
     if: success()
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
       - name: Deploy to production
         uses: dawidd6/action-ansible-playbook@v2
         env:
@@ -63,6 +60,5 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           options: |
             --user ubuntu
-            -vvv
           playbook: deploy-playbook.yml
           requirements: ansible-requirements.yml
