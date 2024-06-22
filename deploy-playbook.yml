@@ -16,3 +16,8 @@
         ports:
           - "80:80"
         recreate: true
+
+    - name: Test newly deployed Nginx
+      shell: |
+        pip3 install -r requirements.txt
+        python3 test_nginx.py
