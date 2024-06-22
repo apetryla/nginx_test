@@ -1,6 +1,8 @@
 ---
 - name: Deploy Docker container
   hosts: all
+  become: true
+  become_user: ubuntu
   tasks:
     - name: Pull Docker image
       community.docker.docker_image:
