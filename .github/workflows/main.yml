@@ -49,10 +49,11 @@ jobs:
       - name: Deploy to EC2
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          VM_IP_ADDRESS: ${{ secrets.VM_IP_ADDRESS }}
         run: |
           echo "$SSH_PRIVATE_KEY" > private_key
           chmod 600 private_key
-          ssh -i private_key -o StrictHostKeyChecking=no ubuntu@{{ secrets.VM_IP_ADDRESS }} << 'EOF'
+          ssh -i private_key -o StrictHostKeyChecking=no ubuntu@$VM_IP_ADDRESS << 'EOF'
             docker pull $IMAGE_NAME
             docker stop nginx_container || true
             docker rm nginx_container || true
