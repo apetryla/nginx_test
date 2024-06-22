@@ -5,7 +5,7 @@
     - name: Pull Docker image
       community.docker.docker_image:
         name: "{{ lookup('env', 'IMAGE_NAME') }}"
-        force_source: pull
+        force_source: true
         source: pull
 
     - name: Restart container with new image
