@@ -3,7 +3,7 @@
   hosts: all
   tasks:
     - name: Ensure Docker is installed
-      community.docker.docker_install:
+      community.docker.docker_container:
         state: present
 
     - name: Log in to Docker Hub
