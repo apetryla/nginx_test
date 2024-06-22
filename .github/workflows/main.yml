@@ -63,5 +63,6 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           options: |
             --user ubuntu
+            -vvv
           playbook: deploy-playbook.yml
           requirements: ansible-requirements.yml
