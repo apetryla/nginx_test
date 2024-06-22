@@ -58,5 +58,7 @@ jobs:
             [all]
             ${{ secrets.VM_IP_ADDRESS }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
+          options: |
+            --user ubuntu
           playbook: deploy-playbook.yml
           requirements: ansible-requirements.yml
