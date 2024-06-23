@@ -1,0 +1,67 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - '**'
+
+env:
+  IMAGE_NAME: kaniuxxjd/nginx-test-app:latest
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build Docker image
+        run: docker build -t nginx-test-app .
+
+      - name: Run Nginx container
+        run: docker run -d -p 80:80 nginx-test-app
+
+      - name: Test Nginx
+        run: |
+          sudo apt-get install -y python3-pip
+          pip3 install -r requirements.txt
+          python3 test_nginx.py
+
+      - name: Tag Docker image
+        run: docker tag nginx-test-app:latest $IMAGE_NAME
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Push Docker image to Docker Hub
+        run: docker push $IMAGE_NAME
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    if: success()
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to production
+        uses: dawidd6/action-ansible-playbook@v2
+        env:
+          ANSIBLE_HOST_KEY_CHECKING: false
+        with:
+          inventory: |
+            [all]
+            ${{ secrets.VM_IP_ADDRESS }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          options: |
+            --user ubuntu
+          playbook: deploy-playbook.yml
+          requirements: ansible-requirements.yml

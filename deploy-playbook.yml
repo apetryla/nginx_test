@@ -1,0 +1,23 @@
+---
+- name: Deploy Docker container
+  hosts: all
+  tasks:
+    - name: Pull Docker image
+      community.docker.docker_image:
+        name: "{{ lookup('env', 'IMAGE_NAME') }}"
+        force_source: true
+        source: pull
+
+    - name: Restart container with new image
+      community.docker.docker_container:
+        name: nginx_container
+        image: "{{ lookup('env', 'IMAGE_NAME') }}"
+        state: started
+        ports:
+          - "80:80"
+        recreate: true
+
+    - name: Test newly deployed Nginx
+      shell: |
+        pip3 install -r requirements.txt
+        python3 test_nginx.py
